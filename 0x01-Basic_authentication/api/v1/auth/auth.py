@@ -22,7 +22,17 @@ class Auth:
             Returns:
                 False
         """
-        return False
+        if not path:
+            return True
+        if not excluded_paths or excluded_paths == []:
+            return True
+        # Check if path ends with slash
+        if path[-1] == '/' and path in excluded_paths:
+            return False
+        elif path+'/' in excluded_paths:
+            return False
+        else:
+            return True
 
     def authorization_header(self, request=None) -> str:
         """ Authorization header

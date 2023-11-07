@@ -20,7 +20,7 @@ class Auth:
                 path: endpoint path
                 excluded_paths: endpoint paths that doesn't require auth
             Returns:
-                False
+                False if path requires auth or True otherwise
         """
         if not path:
             return True
@@ -39,9 +39,11 @@ class Auth:
             Arguments:
                 request: flask request object
             Returns:
-                None
+                Authorization header value or None
         """
-        return None
+        if not request:
+            return None
+        return request.headers.get('Authorization', None)
 
     def current_user(self, request=None) -> TypeVar('User'):
         """ Current user

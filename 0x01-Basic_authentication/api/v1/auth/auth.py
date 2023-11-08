@@ -33,7 +33,7 @@ class Auth:
         elif path+'/' in excluded_paths:
             return False
         else:
-            star_urls = [for url in excluded_paths if url[-1] == '*']
+            star_urls = [url for url in excluded_paths if url[-1] == '*']
             if star_urls != []:
                 for url in star_urls:
                     if re.match(url, path):

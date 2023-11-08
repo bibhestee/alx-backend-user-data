@@ -4,6 +4,7 @@ Authentication module
 """
 from flask import request
 from typing import TypeVar, List
+import re
 
 
 class Auth:
@@ -32,6 +33,11 @@ class Auth:
         elif path+'/' in excluded_paths:
             return False
         else:
+            star_urls = [for url in excluded_paths if url[-1] == '*']
+            if star_urls != []:
+                for url in star_urls:
+                    if re.match(url, path):
+                        return False
             return True
 
     def authorization_header(self, request=None) -> str:

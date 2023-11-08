@@ -20,7 +20,7 @@ class SessionAuth(Auth):
             Return:
                 Session ID or None
         """
-        if not user_id and type(user_id) != str:
+        if not user_id or type(user_id) != str:
             return None
         session_id = str(uuid4())
         self.user_id_by_session_id[session_id] = user_id

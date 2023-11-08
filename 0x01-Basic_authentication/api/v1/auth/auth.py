@@ -33,10 +33,13 @@ class Auth:
         elif path+'/' in excluded_paths:
             return False
         else:
+            pattern = r'\/api\/v1\/(\w+)'
             star_urls = [url for url in excluded_paths if url[-1] == '*']
             if star_urls != []:
                 for url in star_urls:
-                    if re.match(url, path):
+                    url_end = re.match(pattern, url)
+                    path_end = re.match(pattern, path)
+                    if re.match(url_end.group(1), path_end.group(1)):
                         return False
             return True
 

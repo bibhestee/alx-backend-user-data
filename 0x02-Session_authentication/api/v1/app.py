@@ -16,7 +16,9 @@ auth = getenv("AUTH_TYPE", None)
 if auth:
     from api.v1.auth.auth import Auth
     from api.v1.auth.basic_auth import BasicAuth
+    from api.v1.auth.session_auth import SessionAuth
     auth = BasicAuth() if auth == 'basic_auth' else Auth()
+    auth = SessionAuth() if auth == 'session_auth' else Auth()
 
 
 @app.errorhandler(404)

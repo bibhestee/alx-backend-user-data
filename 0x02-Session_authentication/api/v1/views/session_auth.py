@@ -11,7 +11,7 @@ from os import getenv
 def login() -> str:
     """ POST /api/v1/auth_session/login
     Return:
-        - None
+        - response object
     """
     email = request.form.get('email')
     password = request.form.get('password')
@@ -33,3 +33,17 @@ def login() -> str:
     response = jsonify(user.to_json())
     response.set_cookie(session_tip, session_id)
     return response
+
+
+@app_views.route('/auth_session/logout', methods=['DELETE'],
+                 strict_slashes=False)
+def logout() -> str:
+    """ DELETE /api/v1/auth_session/logout
+    Return:
+        - None
+    """
+    from api.v1.app import auth
+    session = auth.destroy_session(request)
+    if not session:
+        abort(404)
+    return jsonify({}), 200

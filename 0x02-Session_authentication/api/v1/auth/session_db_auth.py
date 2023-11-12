@@ -40,8 +40,11 @@ class SessionDBAuth(SessionExpAuth):
         """
         if not session_id:
             return None
+        UserSession.load_from_file()
         user_session = UserSession.search({'session_id': session_id})
-        if user_session[0]:
+        if len(user_session) == 1:
+            if not super().user_id_for_session_id(session_id):
+                return None
             return user_session[0].user_id
         return None
 
@@ -53,7 +56,11 @@ class SessionDBAuth(SessionExpAuth):
             Return:
                 None
         """
-        session_id = self.session_cookie(request)
-        u_session = UserSession()
-        super().destroy_session()
-        u_session.remove(session_id)
+        if request:
+            session_id = self.session_cookie(request)
+            if session_id:
+                self.destroy_session(request)
+                UserSession.load_from_file()
+                session = UserSession.search({'session_id': session_id})
+                if len(session) == 1:
+                    session[0].remove()

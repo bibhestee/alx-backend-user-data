@@ -19,6 +19,8 @@ class SessionDBAuth(SessionExpAuth):
             Return:
                 Session ID or None
         """
+        if not user_id:
+            return None
         session_id = super().create_session(user_id)
         if session_id:
             session = UserSession()
@@ -36,6 +38,8 @@ class SessionDBAuth(SessionExpAuth):
             Return:
                 user id
         """
+        if not session_id:
+            return None
         sessions = UserSession()
         sessions.load_from_file()
         user_session = sessions.get(session_id)

@@ -34,6 +34,8 @@ class SessionExpAuth(SessionAuth):
             Return:
                 Session ID or None
         """
+        if not user_id:
+        	return None
         session_id = super().create_session(user_id)
         if not session_id:
             return None

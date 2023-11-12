@@ -27,7 +27,7 @@ class SessionDBAuth(SessionExpAuth):
             session.user_id = user_id
             session.session_id = session_id
             session.save()
-            return session.id
+            return session.session_id
         return null
 
     def user_id_for_session_id(self, session_id=None):
@@ -40,11 +40,9 @@ class SessionDBAuth(SessionExpAuth):
         """
         if not session_id:
             return None
-        sessions = UserSession()
-        sessions.load_from_file()
-        user_session = sessions.get(session_id)
-        if user_session:
-            return user_session.user_id
+        user_session = UserSession.search({'session_id': session_id})
+        if user_session[0]:
+            return user_session[0].user_id
         return None
 
     def destroy_session(self, request=None):

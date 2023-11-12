@@ -23,7 +23,7 @@ class SessionExpAuth(SessionAuth):
             self.session_duration = 0
         try:
             self.session_duration = int(session_duration)
-        except ValueError:
+        except Exception:
             self.session_duration = 0
 
     def create_session(self, user_id: str = None) -> str:

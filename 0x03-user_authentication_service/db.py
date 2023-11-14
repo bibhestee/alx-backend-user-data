@@ -5,6 +5,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
+from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import InvalidRequestError
 from typing import TypeVar
 from user import Base, User
 
@@ -37,3 +39,15 @@ class DB:
         session.add(new_user)
         session.commit()
         return new_user
+
+    def find_user_by(self, *args: list, **kwargs: dict) -> TypeVar('User'):
+        """ Find user by kwargs from db """
+        session = self._session
+        email = kwargs.get('email', False)
+        if not email:
+            raise InvalidRequestError
+        rows = session.query(User).filter(User.email == email)
+        try:
+            return rows[0]
+        except IndexError:
+            raise NoResultFound

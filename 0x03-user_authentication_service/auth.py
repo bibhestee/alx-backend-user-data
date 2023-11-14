@@ -75,3 +75,23 @@ class Auth:
                 return match
         except NoResultFound:
             return False
+
+    def create_session(self, email: str) -> str:
+        """
+            create session - create a new session id with email
+            Arguments:
+                email(required) - str: email
+            Return:
+                session id
+        """
+        # find user corresponding to the email
+        try:
+            user = self._db.find_user_by(email=email)
+            if user:
+                # generate a new uuid
+                session_id = _generate_uuid()
+                # store the id as user's session_id
+                self._db.update_user(user.id, session_id=session_id)
+                return session_id
+        except Exception:
+            return None

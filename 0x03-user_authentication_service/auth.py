@@ -5,7 +5,7 @@ Authentication module
 import bcrypt
 
 
-def _hash_password(password) -> bytes:
+def _hash_password(password: str) -> bytes:
     """ hash password """
     salt = bcrypt.gensalt()
     pwd = password.encode()

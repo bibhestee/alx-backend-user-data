@@ -141,3 +141,20 @@ class Auth:
             return token
         except Exception:
             raise ValueError
+
+    def update_password(self, reset_token: str, password: str) -> None:
+        """
+            update password
+            Arguments:
+                reset_token(required) - str: reset token string
+                password(required) - str: new password
+            Return:
+                None
+        """
+        try:
+            user = self._db.find_user_by(reset_token=reset_token)
+            hash_pwd = _hash_password(password)
+            self._db.update_user(user.id, hashed_password=hash_pwd)
+            return None
+        except Exception:
+            raise ValueError

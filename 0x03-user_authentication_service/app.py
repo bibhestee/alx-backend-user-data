@@ -82,7 +82,7 @@ def profile():
 def get_reset_password_token():
     """ get reset password token """
     # get the form data from request
-    req = request.form.to_json()
+    req = request.form.to_dict()
     email = req.get('email')
     try:
         user = AUTH._db.find_user_by(email=email)

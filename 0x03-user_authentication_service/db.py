@@ -48,7 +48,7 @@ class DB:
         except AttributeError:
             raise InvalidRequestError
 
-    def update_user(self, user_id, **kwargs) -> None:
+    def update_user(self, user_id: int, **kwargs) -> None:
         """ Update user with arbitrary keyword arguments """
         try:
             user = self.find_user_by(id=user_id)

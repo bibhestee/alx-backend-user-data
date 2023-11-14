@@ -2,7 +2,7 @@
 """
 Flask app
 """
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, make_response, abort
 from auth import Auth
 
 app = Flask(__name__)
@@ -12,7 +12,8 @@ AUTH = Auth()
 @app.route('/', strict_slashes=False)
 def home():
     """ Home route """
-    return jsonify({'message': 'Bienvenue'})
+    payload = {'message': 'Bienvenue'}
+    return jsonify(payload)
 
 
 @app.route('/users', methods=['POST'], strict_slashes=False)
@@ -25,10 +26,29 @@ def users():
         password = req.get('password')
         user = AUTH.register_user(email, password)
     except ValueError:
-        return jsonify({'message': 'email already registered'}), 400
+        payload = {'message': 'email already registered'}
+        return jsonify(payload), 400
     # return success message if user is created
     payload = {'email': user.email, 'message': 'user created'}
     return jsonify(payload)
+
+
+@app.route('/sessions', methods=['POST'], strict_slashes=False)
+def login():
+    """ login """
+    # get the form data from request
+    req = request.form.to_dict()
+    email = req.get('email')
+    password = req.get('password')
+    valid = AUTH.valid_login(email, password)
+    if valid:
+        session_id = AUTH.create_session(email)
+        payload = {'email': email, 'message': 'logged in'}
+        res = make_response(jsonify(payload))
+        res.set_cookie('session_id', session_id)
+        return res
+    else:
+        abort(401)
 
 
 if __name__ == "__main__":

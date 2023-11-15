@@ -19,7 +19,13 @@ def filter_datum(fields: List[str], redaction: str, message: str,
 
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class
-        """
+        Methods:
+            format: format the record with predefined formatter
+        Attributes:
+            REDACTION: redaction to format the record
+            FORMAT: the format style
+            SEPARATOR: the separator for the format style
+    """
 
     REDACTION = "***"
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"

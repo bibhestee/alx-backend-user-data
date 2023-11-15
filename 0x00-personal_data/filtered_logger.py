@@ -5,8 +5,7 @@
 import re
 
 
-def filter_datum(fields: list, redaction: str, message: str, separator:
-                 str) -> list:
+def filter_datum(fields, redaction, message, separator):
     """ filter datum """
     for item in fields:
         pattern = r'({}=)[A-Za-z0-9\/@?\.?]+({})'.format(item, separator)

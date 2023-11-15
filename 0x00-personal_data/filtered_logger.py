@@ -3,9 +3,10 @@
  Filtered Logging Module
 """
 import re
+from typing import List
 
 
-def filter_datum(fields: list[str], redaction: str, message: list,
+def filter_datum(fields: List[str], redaction: str, message: list,
                  separator: str) -> list:
     """ filter datum """
     for item in fields:

@@ -15,7 +15,7 @@ def filter_datum(fields: List[str], redaction: str, message: str,
                  separator: str) -> str:
     """ filter datum """
     for item in fields:
-        pattern = r'({}=)[A-Za-z0-9\/@?\.?\-*]+({})'.format(item, separator)
+        pattern = r'({}=)[^;]+({})'.format(item, separator)
         repl = r'\1{}\2'.format(redaction)
         message = re.sub(pattern, repl, message)
     return message
@@ -26,8 +26,9 @@ def get_logger() -> logging.Logger:
     logger = logging.getLogger('user_data')
     logger.setLevel(logging.INFO)
     logger.propagate = False
-    logger.setFormatter(RedactingFormatter(PII_FIELDS))
-    logging.StreamHandler()
+    stream = logging.StreamHandler()
+    stream.setFormatter(RedactingFormatter(PII_FIELDS))
+    logger.addHandler(stream)
     return logger
 
 
@@ -40,6 +41,21 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     return mysql.connector.connection.MySQLConnection(user=usr, passwd=pwd,
                                                       database=db_name,
                                                       host=host)
+
+
+def main():
+    """ main function to connect to db and perform query of data """
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM users;")
+    logger = get_logger()
+    for row in cursor:
+        n, e, ph, ssn, pa, ip, ll, ua = row
+        msg = f'name={n};email={e};phone={ph};ssn={ssn};'
+        msg += f'password={pa};ip={ip};last_login={ll};user_agent={ua}'
+        logger.info(msg)
+    cursor.close()
+    db.close()
 
 
 class RedactingFormatter(logging.Formatter):
@@ -66,3 +82,6 @@ class RedactingFormatter(logging.Formatter):
         record.msg = filter_datum(self.fields, self.REDACTION, msg,
                                   self.SEPARATOR)
         return super(RedactingFormatter, self).format(record)
+
+
+main()

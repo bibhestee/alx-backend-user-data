@@ -37,8 +37,9 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     usr = getenv('PERSONAL_DATA_DB_USERNAME', 'root')
     pwd = getenv('PERSONAL_DATA_DB_PASSWORD', '')
     host = getenv('PERSONAL_DATA_DB_HOST', 'localhost')
-    return mysql.connector.connect(user=usr, passwd=pwd, database=db_name,
-                                   host=host)
+    return mysql.connector.connection.MySQLConnection(user=usr, passwd=pwd,
+                                                      database=db_name,
+                                                      host=host)
 
 
 class RedactingFormatter(logging.Formatter):

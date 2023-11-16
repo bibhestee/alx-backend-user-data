@@ -83,5 +83,3 @@ class RedactingFormatter(logging.Formatter):
                                   self.SEPARATOR)
         return super(RedactingFormatter, self).format(record)
 
-
-main()

@@ -34,13 +34,12 @@ def get_logger() -> logging.Logger:
 
 def get_db() -> mysql.connector.connection.MySQLConnection:
     """ get database connector """
-    db_name = getenv('PERSONAL_DATA_DB_NAME')
+    db = getenv('PERSONAL_DATA_DB_NAME')
     usr = getenv('PERSONAL_DATA_DB_USERNAME', 'root')
     pwd = getenv('PERSONAL_DATA_DB_PASSWORD', '')
     host = getenv('PERSONAL_DATA_DB_HOST', 'localhost')
-    return mysql.connector.connection.MySQLConnection(user=usr, passwd=pwd,
-                                                      database=db_name,
-                                                      host=host)
+    return mysql.connector.connection.MySQLConnection(user=usr, password=pwd,
+                                                      host=host, database=db)
 
 
 def main():
@@ -82,4 +81,3 @@ class RedactingFormatter(logging.Formatter):
         record.msg = filter_datum(self.fields, self.REDACTION, msg,
                                   self.SEPARATOR)
         return super(RedactingFormatter, self).format(record)
-
